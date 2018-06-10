@@ -4,3 +4,5 @@
 target/
 
 testXmlToJson\.iml
+
+\.sts4-cache/
