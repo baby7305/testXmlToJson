@@ -21,7 +21,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     private UserInfoService userInfoService;
 
     /**
-     *  身份认证 --- 登录.
+     * 身份认证 --- 登录.
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -33,15 +33,15 @@ public class MyShiroRealm extends AuthorizingRealm {
          *  4、返回身份处理对象.
          */
         //1、 获取用户输入的账号.
-        String username = (String)token.getPrincipal();
+        String username = (String) token.getPrincipal();
 
         //2、通过username 从数据库中进行查找，活到UserInfo对象.
         UserInfo userInfo = userInfoService.findByUsername(username);
-        if(userInfo == null){
+        if (userInfo == null) {
             return null;
         }
         //3、加密. 使用SimpleAuthenticationInfo 进行身份处理.
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(),ByteSource.Util.bytes(userInfo.getUserNameAndSalt()), getName());
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(), ByteSource.Util.bytes(userInfo.getUserNameAndSalt()), getName());
 
         //4、返回身份处理对象.
         return simpleAuthenticationInfo;
@@ -53,15 +53,17 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
+        //如果打印信息只执行一次的话，说明缓存生效了，否则不生效. --- 配置缓存成功之后，只会执行1次/每个用户，因为每个用户的权限是不一样的.
+        System.out.println("MyShiroRealm.doGetAuthorizationInfo()");
         //这是shiro提供的.
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         //获取到用户的权限信息.
-        UserInfo userInfo = (UserInfo)principals.getPrimaryPrincipal();
-        for(SysRole role:userInfo.getRoles()){
+        UserInfo userInfo = (UserInfo) principals.getPrimaryPrincipal();
+        for (SysRole role : userInfo.getRoles()) {
             //添加角色.
             authorizationInfo.addRole(role.getRole());
             //添加权限.
-            for(SysPermission p:role.getPermissions()){
+            for (SysPermission p : role.getPermissions()) {
                 authorizationInfo.addStringPermission(p.getPermission());
             }
         }

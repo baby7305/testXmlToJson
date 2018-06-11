@@ -1,6 +1,7 @@
 package com.company.config;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -72,7 +73,12 @@ public class ShiroConfiguration {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+
+        //设置自定义的realm
         securityManager.setRealm(myShiroRealm());
+
+        //注入缓存管理器.
+        securityManager.setCacheManager(ehCacheManager());
         return securityManager;
     }
 
@@ -104,5 +110,16 @@ public class ShiroConfiguration {
         AuthorizationAttributeSourceAdvisor attributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         attributeSourceAdvisor.setSecurityManager(securityManager);//设置安全管理器
         return attributeSourceAdvisor;
+    }
+
+    /**
+     * 注入Ehcache缓存.
+     */
+    @Bean
+    public EhCacheManager ehCacheManager() {
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        //配置缓存文件.
+        ehCacheManager.setCacheManagerConfigFile("classpath:config/ehcache-shiro.xml");
+        return ehCacheManager;
     }
 }
