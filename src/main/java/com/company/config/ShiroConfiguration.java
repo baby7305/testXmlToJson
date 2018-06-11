@@ -55,6 +55,9 @@ public class ShiroConfiguration {
 
         //userInfo/userAdd : 一旦重新启动，仍然需要重新登录的.
 
+        //允许favicon.ico可以匿名访问（anon）
+        filterChainMap.put("/favicon.ico","anon");
+
         //authc:所有的URL都必须认证通过才可以访问.
         filterChainMap.put("/**", "authc");
 
