@@ -29,7 +29,7 @@ public class UserInfo implements Serializable {
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "SysUserRole", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "roleId")})
-    private List<UserInfo> roles;
+    private List<SysRole> roles;
 
     public long getUid() {
         return uid;
@@ -67,6 +67,11 @@ public class UserInfo implements Serializable {
         return salt;
     }
 
+    //为了密码的更安全. username+salt;
+    public String getUserNameAndSalt() {
+        return this.username + this.salt;
+    }
+
     public void setSalt(String salt) {
         this.salt = salt;
     }
@@ -79,11 +84,12 @@ public class UserInfo implements Serializable {
         this.state = state;
     }
 
-    public List<UserInfo> getRoles() {
+
+    public List<SysRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<UserInfo> roles) {
+    public void setRoles(List<SysRole> roles) {
         this.roles = roles;
     }
 

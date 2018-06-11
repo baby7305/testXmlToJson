@@ -27,7 +27,7 @@ public class SysRole implements Serializable {
     //角色 - 权限有关系.
     @ManyToMany(fetch = FetchType.EAGER)//当获取SysRole的时候，立即从数据库加载permission信息.
     @JoinTable(name = "SysRolePermission", joinColumns = {@JoinColumn(name = "roleId")}, inverseJoinColumns = {@JoinColumn(name = "permissionId")})
-    private List<SysRole> permissions;//
+    private List<SysPermission> permissions;//
 
     public long getId() {
         return id;
@@ -69,11 +69,11 @@ public class SysRole implements Serializable {
         this.userInfos = userInfos;
     }
 
-    public List<SysRole> getPermissions() {
+    public List<SysPermission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<SysRole> permissions) {
+    public void setPermissions(List<SysPermission> permissions) {
         this.permissions = permissions;
     }
 

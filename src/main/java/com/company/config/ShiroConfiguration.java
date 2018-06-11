@@ -1,5 +1,6 @@
 package com.company.config;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -70,6 +71,27 @@ public class ShiroConfiguration {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(myShiroRealm());
         return securityManager;
+    }
+
+    @Bean
+    public MyShiroRealm myShiroRealm() {
+        MyShiroRealm myShiroRealm = new MyShiroRealm();
+        myShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return myShiroRealm;
+    }
+
+    /**
+     * 密码加密算法.
+     *
+     * @return
+     */
+    @Bean
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName("md5");//加密算法.
+        hashedCredentialsMatcher.setHashIterations(2);//散列的次数.
+        return hashedCredentialsMatcher;
     }
 }
