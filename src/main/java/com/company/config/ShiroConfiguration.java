@@ -1,5 +1,6 @@
 package com.company.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -56,7 +57,7 @@ public class ShiroConfiguration {
         //userInfo/userAdd : 一旦重新启动，仍然需要重新登录的.
 
         //允许favicon.ico可以匿名访问（anon）
-        filterChainMap.put("/favicon.ico","anon");
+        filterChainMap.put("/favicon.ico", "anon");
 
         //authc:所有的URL都必须认证通过才可以访问.
         filterChainMap.put("/**", "authc");
@@ -159,5 +160,16 @@ public class ShiroConfiguration {
         //需要管理我们的cookie对象.
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
+    }
+
+    /**
+     * 是shiro - thymeleaf 解析.
+     *
+     * @return
+     */
+    @Bean
+    public ShiroDialect shiroDialect() {
+        ShiroDialect shiroDialect = new ShiroDialect();
+        return shiroDialect;
     }
 }

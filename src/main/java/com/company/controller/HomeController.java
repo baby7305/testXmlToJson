@@ -1,7 +1,10 @@
 package com.company.controller;
 
+import com.company.core.bean.UserInfo;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +16,11 @@ import java.util.Map;
 public class HomeController {
 
     @RequestMapping(value = {"/", "/index"})
-    public String index() {
+    public String index(Map<String, Object> map) {
+        //获取到用户信息.Shiro.---SecurityUtils.getSubject() 获取到.UserInfo.
+        Subject subject = SecurityUtils.getSubject();
+        UserInfo userInfo = (UserInfo) subject.getPrincipal();
+        map.put("userInfo", userInfo);
         return "/index";
     }
 
