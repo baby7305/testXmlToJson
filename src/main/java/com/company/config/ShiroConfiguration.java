@@ -2,6 +2,7 @@ package com.company.config;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
@@ -93,5 +94,15 @@ public class ShiroConfiguration {
         hashedCredentialsMatcher.setHashAlgorithmName("md5");//加密算法.
         hashedCredentialsMatcher.setHashIterations(2);//散列的次数.
         return hashedCredentialsMatcher;
+    }
+
+    /**
+     * 开启Shiro aop注解支持.
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor attributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        attributeSourceAdvisor.setSecurityManager(securityManager);//设置安全管理器
+        return attributeSourceAdvisor;
     }
 }
