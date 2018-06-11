@@ -5,7 +5,9 @@ import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -47,6 +49,12 @@ public class ShiroConfiguration {
         //配置退出. 过滤器：logout,这个由shiro进行实现的.
         filterChainMap.put("/logout", "logout");
 
+        //配置记住我 认证通过的才可以访问.
+        filterChainMap.put("/index", "user");
+        filterChainMap.put("/", "user");
+
+        //userInfo/userAdd : 一旦重新启动，仍然需要重新登录的.
+
         //authc:所有的URL都必须认证通过才可以访问.
         filterChainMap.put("/**", "authc");
 
@@ -79,6 +87,9 @@ public class ShiroConfiguration {
 
         //注入缓存管理器.
         securityManager.setCacheManager(ehCacheManager());
+
+        //配置记住我.
+        securityManager.setRememberMeManager(cookieRememberMeManager());
         return securityManager;
     }
 
@@ -121,5 +132,29 @@ public class ShiroConfiguration {
         //配置缓存文件.
         ehCacheManager.setCacheManagerConfigFile("classpath:config/ehcache-shiro.xml");
         return ehCacheManager;
+    }
+
+    /**
+     * 配置cookie对象. -- 记住我cookie
+     */
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        //cookie的名称，也即是 前端 checkbox的name = rememberMe
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        //可选： 配置cookie的生效时间，单位是秒. 60*60*24 = 1天.
+        simpleCookie.setMaxAge(60 * 60 * 24);
+        return simpleCookie;
+    }
+
+
+    /**
+     * cookie的管理对象.
+     */
+    @Bean
+    public CookieRememberMeManager cookieRememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        //需要管理我们的cookie对象.
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        return cookieRememberMeManager;
     }
 }
