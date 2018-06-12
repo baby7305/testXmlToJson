@@ -10,6 +10,9 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 /**
  * 需要编写两个对象：
@@ -35,6 +38,14 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         factoryBean.setSecurityManager(securityManager);
 
+        //配置.
+        factoryBean.getFilters().put("statelessAuthc", statelessAccessControlFilter());
+
+        //拦截请求.
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        filterChainDefinitionMap.put("/**", "statelessAuthc");
+        factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
         return factoryBean;
     }
 
@@ -48,6 +59,7 @@ public class ShiroConfiguration {
         //设置subjectFactory.
         securityManager.setSubjectFactory(subjectFactory());
         securityManager.setSessionManager(sessionManager());
+        securityManager.setRealm(stalessRealm());
         /*
          * 第二： 需要禁用使用Sessions 作为存储策略的实现，这个主要由securityManager的subjectDao的sessionStorageEvaluator进行管理的。
          */
@@ -75,6 +87,26 @@ public class ShiroConfiguration {
         DefaultSessionManager sessionManager = new DefaultSessionManager();
         sessionManager.setSessionValidationSchedulerEnabled(false);
         return sessionManager;
+    }
+
+    /**
+     * 注入自定义的realm.
+     *
+     * @return
+     */
+    @Bean
+    public StatelessAuthorizingRealm stalessRealm() {
+        StatelessAuthorizingRealm statelessAuthorizingRealm = new StatelessAuthorizingRealm();
+        return statelessAuthorizingRealm;
+    }
+
+    /**
+     * 注入访问控制器.
+     */
+    @Bean
+    public StatelessAccessControlFilter statelessAccessControlFilter() {
+        StatelessAccessControlFilter statelessAccessControlFilter = new StatelessAccessControlFilter();
+        return statelessAccessControlFilter;
     }
 
 
