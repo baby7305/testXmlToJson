@@ -58,6 +58,9 @@ public class ShiroConfiguration {
 
         //允许favicon.ico可以匿名访问（anon）
         filterChainMap.put("/favicon.ico", "anon");
+        filterChainMap.put("/js/**", "anon");//可匿名访问到js文件
+        filterChainMap.put("/css/**", "anon");
+        filterChainMap.put("/img/**", "anon");
 
         //authc:所有的URL都必须认证通过才可以访问.
         filterChainMap.put("/**", "authc");
