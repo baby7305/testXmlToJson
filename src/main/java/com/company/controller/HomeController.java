@@ -2,6 +2,7 @@ package com.company.controller;
 
 import com.company.core.bean.UserInfo;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
@@ -43,6 +44,8 @@ public class HomeController {
                 msg = "账号不存在";
             } else if (IncorrectCredentialsException.class.getName().equals(exception)) {
                 msg = "密码不正确";
+            } else if (ExcessiveAttemptsException.class.getName().equals(exception)) {
+                msg = "密码输入错误次数过多";
             } else {
                 msg = "else -->" + exception;
             }

@@ -114,7 +114,7 @@ public class ShiroConfiguration {
      */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        MyHashedCredentialsMatcher hashedCredentialsMatcher = new MyHashedCredentialsMatcher(ehCacheManager());
         hashedCredentialsMatcher.setHashAlgorithmName("md5");//加密算法.
         hashedCredentialsMatcher.setHashIterations(2);//散列的次数.
         return hashedCredentialsMatcher;
