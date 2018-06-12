@@ -1,5 +1,8 @@
 package com.company.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,4 +14,12 @@ public class HelloController {
         return "helo,andy";
     }
 
+    @RequestMapping("/hello1")
+    public String hello1() {
+        //应该是会报错的：Session creation has been disabled for the current subject
+        Subject currentUser = SecurityUtils.getSubject();
+        Session session = currentUser.getSession();
+        System.out.println(session);
+        return "helo,andy";
+    }
 }
