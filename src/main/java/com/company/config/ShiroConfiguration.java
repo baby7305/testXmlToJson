@@ -1,6 +1,9 @@
 package com.company.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.google.code.kaptcha.Producer;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -12,8 +15,11 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * 这是Shiro 配置类：
@@ -44,6 +50,11 @@ public class ShiroConfiguration {
         //2、设置SecurityManager;
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
+        Map<String, Filter> filters = new HashMap<String, Filter>();
+        CustomFormAuthticationFilter authticationFilter = new CustomFormAuthticationFilter();
+        filters.put("authc", authticationFilter);
+        shiroFilterFactoryBean.setFilters(filters);
+
         //3、配置拦截器.: 使用Map进行配置:LinkedHashMap ，LinkedHashMap是有序的, shiro会根据添加的顺序进行拦截.
         Map<String, String> filterChainMap = new LinkedHashMap<String, String>();
 
@@ -58,6 +69,7 @@ public class ShiroConfiguration {
 
         //允许favicon.ico可以匿名访问（anon）
         filterChainMap.put("/favicon.ico", "anon");
+        filterChainMap.put("/captcha", "anon");
         filterChainMap.put("/js/**", "anon");//可匿名访问到js文件
         filterChainMap.put("/css/**", "anon");
         filterChainMap.put("/img/**", "anon");
@@ -174,5 +186,74 @@ public class ShiroConfiguration {
     public ShiroDialect shiroDialect() {
         ShiroDialect shiroDialect = new ShiroDialect();
         return shiroDialect;
+    }
+
+    /**
+     * 验证码生成器;
+     *
+     * @return
+     */
+    @Bean
+    public Producer producer() {
+        System.out.println("ShiroConfiguration.captchaProducer()");
+        DefaultKaptcha producer = new DefaultKaptcha();
+        Properties properties = new Properties();
+
+		/*
+kaptcha.border  是否有边框  默认为true  我们可以自己设置yes，no
+kaptcha.border.color   边框颜色   默认为Color.BLACK
+kaptcha.border.thickness  边框粗细度  默认为1
+kaptcha.producer.impl   验证码生成器  默认为DefaultKaptcha
+kaptcha.textproducer.impl   验证码文本生成器  默认为DefaultTextCreator
+kaptcha.textproducer.char.string   验证码文本字符内容范围  默认为abcde2345678gfynmnpwx
+kaptcha.textproducer.char.length   验证码文本字符长度  默认为5
+kaptcha.textproducer.font.names    验证码文本字体样式  默认为new Font("Arial", 1, fontSize), new Font("Courier", 1, fontSize)
+kaptcha.textproducer.font.size   验证码文本字符大小  默认为40
+kaptcha.textproducer.font.color  验证码文本字符颜色  默认为Color.BLACK
+kaptcha.textproducer.char.space  验证码文本字符间距  默认为2
+kaptcha.noise.impl    验证码噪点生成对象  默认为DefaultNoise
+kaptcha.noise.color   验证码噪点颜色   默认为Color.BLACK
+kaptcha.obscurificator.impl   验证码样式引擎  默认为WaterRipple
+kaptcha.word.impl   验证码文本字符渲染   默认为DefaultWordRenderer
+kaptcha.background.impl   验证码背景生成器   默认为DefaultBackground
+kaptcha.background.clear.from   验证码背景颜色渐进   默认为Color.LIGHT_GRAY
+kaptcha.background.clear.to   验证码背景颜色渐进   默认为Color.WHITE
+kaptcha.image.width   验证码图片宽度  默认为200
+kaptcha.image.height  验证码图片高度  默认为50
+		 */
+
+        // 是否有边框  默认为true  我们可以自己设置yes，no
+        properties.put("kaptcha.border", "yes");
+
+        //边框颜色   默认为Color.BLACK
+        properties.put("kaptcha.border.color", "105,179,90");
+
+        //字体颜色;
+        properties.put("kaptcha.textproducer.font.color", "blue");
+
+        //验证码样式引擎  默认为WaterRipple
+        properties.put("kaptcha.obscurificator.impl", "com.google.code.kaptcha.impl.ShadowGimpy");
+
+        // 验证码图片宽度  默认为200
+        properties.put("kaptcha.image.width", "145");
+
+        //验证码图片高度  默认为50
+        properties.put("kaptcha.image.height", "45");
+
+        //验证码文本字符大小  默认为40
+        properties.put("kaptcha.textproducer.font.size", "45");
+
+        //存放在session中的key;
+        properties.put("kaptcha.session.key", "code");
+
+        //产生字符的长度
+        properties.put("kaptcha.textproducer.char.length", "4");
+
+        //文本字符字体
+        properties.put("kaptcha.textproducer.font.names", "宋体,楷体,微软雅黑");
+
+        Config config = new Config(properties);
+        producer.setConfig(config);
+        return producer;
     }
 }
