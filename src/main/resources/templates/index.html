@@ -10,6 +10,7 @@
     <!-- 1、显示当前登录的用户名. -->
     <h3>
         <span th:text="'登录账号：'+${userInfo.username}+'--名称：'+${userInfo.name}"></span>
+        <a href="/logout">退出</a>
     </h3>
 
     <!-- 2、通过shiro标签控制权限信息. -->
