@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.webservice.mesesb.saicmotor.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://webservice.mesesb.saicmotor.com/" name="MesEsbServiceImplService" targetNamespace="http://impl.webservice.mesesb.saicmotor.com/">
+  <wsdl:import location="http://swhhn057.smcv.saicmotor.com/MES-ESB/ws/mesEsbWebService?wsdl=MesEsbService.wsdl" namespace="http://webservice.mesesb.saicmotor.com/">
+    </wsdl:import>
+  <wsdl:binding name="MesEsbServiceImplServiceSoapBinding" type="ns1:MesEsbService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="dataSwitching">
+      <soap:operation soapAction="urn:DataSwitching" style="document"/>
+      <wsdl:input name="dataSwitching">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="dataSwitchingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MesEsbServiceImplService">
+    <wsdl:port binding="tns:MesEsbServiceImplServiceSoapBinding" name="MesEsbServiceImplPort">
+      <soap:address location="http://swhhn057.smcv.saicmotor.com/MES-ESB/ws/mesEsbWebService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
