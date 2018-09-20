@@ -1,14 +1,10 @@
 
 package webservice;
 
+import javax.xml.namespace.QName;
+import javax.xml.ws.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebEndpoint;
-import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.WebServiceFeature;
 
 
 /**
@@ -17,7 +13,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "MesEsbServiceImplService", targetNamespace = "http://impl.webservice.mesesb.saicmotor.com/", wsdlLocation = "http://swhhn057.smcv.saicmotor.com:80/MES-ESB/ws/mesEsbWebService?wsdl")
+@WebServiceClient(name = "MesEsbServiceImplService", targetNamespace = "http://impl.webservice.mesesb.saicmotor.com/", wsdlLocation = "http://10.68.13.64:8080/MES-ESB/ws/mesEsbWebService?wsdl")
 public class MesEsbServiceImplService
     extends Service
 {
@@ -30,7 +26,7 @@ public class MesEsbServiceImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://swhhn057.smcv.saicmotor.com:80/MES-ESB/ws/mesEsbWebService?wsdl");
+            url = new URL("http://10.68.13.64:8080/MES-ESB/ws/mesEsbWebService?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

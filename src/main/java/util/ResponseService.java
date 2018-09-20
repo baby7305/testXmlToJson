@@ -14,7 +14,7 @@ public class ResponseService {
 
 	public ResponseService() {
 		this.FromId = "mj";
-		this.passPort = "abc456";
+		this.passPort = "abc123";
 		this.bizType = "mes_feature";
 	}
 
